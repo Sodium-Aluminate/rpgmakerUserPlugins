@@ -1,5 +1,5 @@
 # RPG Maker User Plugins
-A collection of useful plugins for RMMV/MZ.
+A collection of useful plugins for RMMV/MZ. | [中文](README_zh.md)
 
 # Installation
 ## Dependencies
