@@ -1,7 +1,6 @@
-// 提供一个 decryptFiles(path) 接口，来将加密文件解密
-// decryptAllFiles() 接口，将所有文件解密并且删掉加密文件，然后将游戏json标记为未加密以防无法启动
-// 说是api其实我建议在控制台call。
-// 如果不在 node 环境（即，浏览器打开）那肯定没辙
+/*:
+ * @plugindesc use decryptFiles() / decryptAllFiles() in console to decrypt rpgmaker media(audio/image)
+ */
 (() => {
 	const window = (globalThis as unknown as any);
 	if (typeof require !== "function" || typeof process !== "object" || !window.process?.versions?.node || typeof window.find !== "function") return;
