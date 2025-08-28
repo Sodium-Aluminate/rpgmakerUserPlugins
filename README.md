@@ -72,3 +72,8 @@ Automatically opens the console (dev tools) when the game starts.
   - yes, you can open `index.html` in your browser, but you cannot save the game, and some third-party plugins that load Node libraries may cause the game to crash.
     - Using an HTTP server instead of `file://` allows saving, but honestly, that's a bit overkill.
 - As for JoiPlay? It apparently doesn't have a console.
+
+## saveFileSkipCompress
+will not compress the save file. 
+
+the new save file can be read by human but can't be read by vanilla rpgmaker. if you wants to remove this plugin, hold `Shift` before save to create a save file that can be read by vanilla rpgmaker.
