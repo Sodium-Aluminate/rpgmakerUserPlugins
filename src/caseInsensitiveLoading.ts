@@ -46,6 +46,7 @@
 		return path.join(dir, name + newExt);
 	}
 
+	// fileNameCaches[foo/bar][aaa.txt] -> AAA.txt
 	const fileNameCaches: Record<string, Record<string, string>> = {}
 
 	function checkAndCache(cwd: string, target: string, permissiveExt: boolean = false): string | undefined {
@@ -66,15 +67,19 @@
 		if (!permissiveExt || cache[target]) return cache[target]
 
 		const rawExt = path.extname(target)
+		
+		let encExt: string;
+		
 		if (rpgMakerName === "MZ") {
-			let r = cache[`${target}_`];
-			return replaceExt(r, rawExt)
+			encExt = `${target}_`
 		} else if (rpgMakerName === "MV" && window?.Decrypter?.extToEncryptExt) {
-			return replaceExt(cache[window.Decrypter.extToEncryptExt(target)], rawExt)
-		}
+			encExt = window.Decrypter.extToEncryptExt(target)
+		}else return
+		const r = cache[encExt];
+		return r && replaceExt(r, rawExt)
 	}
 
-	function resolve(url: string): string {
+	function resolveDecoded(url: string): string {
 
 		if (existsSync(url)) return url;
 		let dirs = url.split(path.sep);
@@ -89,6 +94,10 @@
 		}
 		let realFileName = checkAndCache(path.join(...realDirs), fileName, true)
 		return typeof realFileName === "string" ? path.join(...realDirs, realFileName) : undefined;
+	}
+	
+	function resolve(url:string):string{
+		return encodeURI(resolveDecoded(decodeURIComponent(url)))
 	}
 
 	const mvInjector: Injector = function (cir: Cir) {
