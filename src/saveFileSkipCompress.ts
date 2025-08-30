@@ -25,7 +25,7 @@
 				if (!window.Input?.isPressed || window.Input.isPressed("shift")) return
 
 				const [json] = cir.args
-				cir.setReturnValue(Promise.resolve(json))
+				cir.setReturnValue(json)
 			})
 			//StorageManager.saveToLocalFile = function(savefileId, json) {
 			//     var data = LZString.compressToBase64(json);
