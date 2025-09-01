@@ -21,32 +21,22 @@
 			})
 			break
 		case "MV":
-			injector.inject("LZString.compressToBase64", "HEAD", function (cir:Cir){
+			injector.inject("LZString.compressToBase64", "HEAD", function (cir: Cir) {
 				if (!window.Input?.isPressed || window.Input.isPressed("shift")) return
 
 				const [json] = cir.args
 				cir.setReturnValue(json)
 			})
-			//StorageManager.saveToLocalFile = function(savefileId, json) {
-			//     var data = LZString.compressToBase64(json);
-			//     var fs = require('fs');
-			//     var dirPath = this.localFileDirectoryPath();
-			//     var filePath = this.localFilePath(savefileId);
-			//     if (!fs.existsSync(dirPath)) {
-			//         fs.mkdirSync(dirPath);
-			//     }
-			//     fs.writeFileSync(filePath, data);
-			// };
-			// 
-			// StorageManager.loadFromLocalFile = function(savefileId) {
-			//     var data = null;
-			//     var fs = require('fs');
-			//     var filePath = this.localFilePath(savefileId);
-			//     if (fs.existsSync(filePath)) {
-			//         data = fs.readFileSync(filePath, { encoding: 'utf8' });
-			//     }
-			//     return LZString.decompressFromBase64(data);
-			// };
+			injector.inject("LZString.decompressFromBase64", "HEAD", function (cir: Cir) {
+				// sadly, if some save file only save a number like "1234", we can't find out if it is a b64 or not.
+				const data: string = cir.args[0]
+				if (typeof data !== "string") return
+				try {
+					JSON.parse(data)
+					cir.setReturnValue(data)
+				} catch (ignored) {}
+				if (!(data.length % 4 === 0 && /^[-A-Za-z0-9+/]*={0,2}$/.exec(data))) { cir.setReturnValue(data) }
+			});
 			break
 		default:
 			console.warn(`unknown rpgmaker version: ${rpgMakerName}`)
