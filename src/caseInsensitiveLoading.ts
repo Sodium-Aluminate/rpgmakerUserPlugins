@@ -54,7 +54,7 @@
 		let d = fileNameCaches[cwd]?.[target]
 		if (d && existsSync(cwd, d)) return d
 
-		let cache = fs.readdirSync(cwd)
+		let cache = fs.readdirSync(path.join(htmlDir, cwd))
 			.reduce((records: Record<string, string>, fileName: string) => {
 				let lowerCase = fileName.toLowerCase();
 				if (records[lowerCase]) console.warn(`${JSON.stringify(cwd)} has two folders with the same name but different capitalization: ${JSON.stringify(fileName)} and ${JSON.stringify(records[lowerCase])}`)
@@ -67,19 +67,19 @@
 		if (!permissiveExt || cache[target]) return cache[target]
 
 		const rawExt = path.extname(target)
-		
+
 		let encExt: string;
-		
+
 		if (rpgMakerName === "MZ") {
 			encExt = `${target}_`
 		} else if (rpgMakerName === "MV" && window?.Decrypter?.extToEncryptExt) {
 			encExt = window.Decrypter.extToEncryptExt(target)
-		}else return
+		} else return
 		const r = cache[encExt];
 		return r && replaceExt(r, rawExt)
 	}
 
-	function resolveDecoded(url: string): string {
+	function resolveDecoded(url: string): string | undefined {
 
 		if (existsSync(url)) return url;
 		let dirs = url.split(path.sep);
@@ -95,9 +95,14 @@
 		let realFileName = checkAndCache(path.join(...realDirs), fileName, true)
 		return typeof realFileName === "string" ? path.join(...realDirs, realFileName) : undefined;
 	}
-	
-	function resolve(url:string):string{
-		return encodeURI(resolveDecoded(decodeURIComponent(url)))
+
+	function resolve(url: string): string | undefined {
+		let r: string | undefined = resolveDecoded(decodeURIComponent(url));
+		if (r === undefined) {
+			console.warn(`can't resolve: ${url}`);
+			return undefined
+		}
+		return encodeURI(r)
 	}
 
 	const mvInjector: Injector = function (cir: Cir) {
