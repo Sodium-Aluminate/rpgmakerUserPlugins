@@ -7,7 +7,7 @@
 
 自动安装脚本需要：`bwrap` 和 `nodejs`;
 
-~~手动安装需要[手](https://zh.m.wikipedia.org/wiki/手)~~。
+~~手动安装需要[手](https://zh.wikipedia.org/wiki/手)~~。
 
 插件本身需要被安装游戏的 nwjs 要足够新。
 - 只要你的游戏没有使用奇怪的混淆插件（如[咸鱼喵喵](https://store.steampowered.com/app/1478160/Nyaruru_Fishy_Fight)这种坏例子），你可以手动更新游戏的 nwjs版本。

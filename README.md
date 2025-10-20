@@ -7,7 +7,7 @@ To compile: `tsc` (likely comes with the `typescript` package);
 
 For the auto-installation script: `bwrap` and `nodejs`;
 
-~~Manual installation requires [man](https://en.wikipedia.org/wiki/Man)~~.
+~~Manual installation requires a [man](https://en.wikipedia.org/wiki/Man)~~.
 
 The plugins themselves require the game's NW.js to be sufficiently up-to-date.
 - As long as your game doesn't use weird obfuscation plugins (like the bad example [Nyaruru Fishy Fight](https://store.steampowered.com/app/1478160/Nyaruru_Fishy_Fight)), you can manually update the NW.js version of the game.
