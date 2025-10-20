@@ -9,21 +9,21 @@
 	const {TextDecoder} = require('util');
 
 	type rmType = "MV" | "MZ";
+	type rmFileHeads = "RPGMV" | "RPGMZ"; // rpgmz still using RPGMV head yet.
 	const RPGMAKER_NAME: rmType = window.Utils.RPGMAKER_NAME;
 
 	const UtilsOrDecrypter = window?.[{MZ: "Utils", MV: "Decrypter"}[RPGMAKER_NAME]];
 	assert(UtilsOrDecrypter?.decryptArrayBuffer, `can't find decryptArrayBuffer function. is current env: RPG ${RPGMAKER_NAME}?`)
 
-	function fileHead(filePath: string): rmType | undefined {
-		const fs = require("fs");
+	function fileHead(filePath: string): rmFileHeads | undefined {
 		if (!fs.statSync(filePath).isFile()) return null
 		const fd = fs.openSync(filePath, "r");
 		const buffer = Buffer.alloc(5);
 		const l = fs.readSync(fd, buffer, 0, 5, 0)
 		fs.closeSync(fd);
 		if (l < 5) return null;
-		if (buffer.equals(Buffer.from([0x52, 0x50, 0x47, 0x4D, 0x5A]))) return "MZ";
-		if (buffer.equals(Buffer.from([0x52, 0x50, 0x47, 0x4D, 0x56]))) return "MV";
+		if (buffer.equals(Buffer.from([0x52, 0x50, 0x47, 0x4D, 0x5A]))) return "RPGMZ";
+		if (buffer.equals(Buffer.from([0x52, 0x50, 0x47, 0x4D, 0x56]))) return "RPGMV";
 	}
 
 
@@ -92,28 +92,23 @@ usage:
 		}
 		const fileNames: string[] = find(path)
 		for (const fileName of fileNames) {
-			let head: rmType | undefined = fileHead(fileName);
+			let head: rmFileHeads | undefined = fileHead(fileName);
 			let suffix: rmType | undefined = fileNameSuffix(fileName);
 			// normal files(js, etc).
 			if (!head && !suffix) continue
 			// normal file with enc filename suffix(_, MV/_, MZ)
 			if (!head) {
-				if (removeOldFile) fs.renameSync(fileName, toDecFileName(fileName))
-				else fs.copyFileSync(fileName, toDecFileName(fileName))
-				continue
-			}
-			// head with different game env (e.g. try to decrypt MV file in MZ game)
-			if (head !== RPGMAKER_NAME) {
-				console.warn(`skip "${fileName}" because it's RPG ${head} game but script running in ${RPGMAKER_NAME}.`)
+				removeOldFile ?
+					fs.renameSync(fileName, toDecFileName(fileName)) :
+					fs.copyFileSync(fileName, toDecFileName(fileName))
 				continue
 			}
 
-			if (suffix !== head) {
+			if (suffix !== RPGMAKER_NAME) {
 				const s = suffix ? "unencrypted" : `RPG ${suffix}`
 				console.warn(`found file ${fileName}, file head is RPG ${head} but suffix looks like ${s}`)
 			}
 
-			assert(head === RPGMAKER_NAME)
 			const buffer = new Uint8Array(fs.readFileSync(fileName, {encoding: null})).buffer;
 			const decBuffer = UtilsOrDecrypter.decryptArrayBuffer(buffer)
 			fs.writeFileSync(toDecFileName(fileName), Buffer.from(decBuffer))
