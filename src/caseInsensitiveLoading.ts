@@ -97,6 +97,7 @@
 	}
 
 	function resolve(url: string): string | undefined {
+		if (url.startsWith("data:")) return undefined
 		let r: string | undefined = resolveDecoded(decodeURIComponent(url));
 		if (r === undefined) {
 			console.warn(`can't resolve: ${url}`);
