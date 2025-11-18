@@ -9,6 +9,12 @@ if [ -z "$target_dir" ]; then
 	exit 1
 fi
 
+
+stdout_mode=false
+if [[ "${2-}" == "--stdout" ]]; then
+	stdout_mode=true
+fi
+
 target_dir="$(realpath "$target_dir")"
 
 if [ -d "$target_dir" ]; then
@@ -29,7 +35,7 @@ if [ ! -f "$plugin_js_file_path" ]; then
 fi
 
 
-printf 'found plugins.js in: %s\n' "$plugin_js_file_path"
+#printf 'found plugins.js in: %s\n' "$plugin_js_file_path"
 
 if ! command -v bwrap >/dev/null 2>&1; then
   printf '%s\n' "need bwrap to create a sandbox." >&2
@@ -52,10 +58,14 @@ args=(
 	
 	--ro-bind "$buildDir" "$buildDir"
 	--ro-bind "$scriptDir" "$scriptDir"
-	--bind "$plugin_js_file_path" "$plugin_js_file_path"
 )
+if $stdout_mode; then
+	args+=(--ro-bind "$plugin_js_file_path" "$plugin_js_file_path")
+else
+	args+=(--bind "$plugin_js_file_path" "$plugin_js_file_path")
+fi
 
-echo -- "${args[@]}"
-bwrap "${args[@]}" node "$scriptDir"/installPlugin.js "$plugin_js_file_path"
+#echo -- "${args[@]}"
+bwrap "${args[@]}" node "$scriptDir"/installPlugin.js "$plugin_js_file_path" $($stdout_mode && echo --stdout)
 
 cp "$buildDir"/*.js "$base"/js/plugins/
