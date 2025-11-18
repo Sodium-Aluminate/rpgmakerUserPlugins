@@ -1,8 +1,10 @@
 {
 	"compilerOptions": {
 		"target": "ESNext",
-		"moduleResolution": "Node",
+		"moduleResolution": "bundler",
+		"module": "ESNext",
 		"outDir": "build",
 		"allowJs": false
-	}
+	},
+	"exclude": ["./utils"],
 }
