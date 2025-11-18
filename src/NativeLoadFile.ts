@@ -38,8 +38,9 @@
 
 			function requestInfo(): [string, "utf8"?] | false {
 				const openCalls = loggedFunctionCalls.filter(call => call.fn === "open");
-				// rmmz 只会 open() 一次 因此如果不为1我们就不hook
-				if (openCalls.length !== 1) return false;
+				// rmmz 只会 open() 一次 因此如果不为1我们就不hook；如果带更多参数（如 sync 的 xhr）也放弃hook。
+				// 兼容 https://github.com/nz-prism/RPG-Maker-MZ/blob/master/RandomDungeon/js/plugins/RandomDungeon.js
+				if (openCalls.length !== 1 || openCalls[0].arg.length !== 2) return false;
 				const [method, url] = openCalls[0].arg;
 				// rmmz 只会 GET 一个相对 url，没有协议头
 				if (method !== "GET" || url.match(/^[a-z][a-z0-9+-.]+:/i)) return false;
