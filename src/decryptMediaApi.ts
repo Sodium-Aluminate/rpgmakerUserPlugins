@@ -1,18 +1,19 @@
 /*:
  * @plugindesc use decryptFiles() / decryptAllFiles() in console to decrypt rpgmaker media(audio/image)
  */
+import type {DataSystem, Utils as MZ_Utils} from "rmmz-types";
+
 (() => {
-	const window = (globalThis as unknown as any);
-	if (typeof require !== "function" || typeof process !== "object" || !window.process?.versions?.node || typeof window.find !== "function") return;
+	if (typeof require !== "function" || typeof process !== "object" || !process?.versions?.node || typeof find !== "function") return;
 	const fs = require("fs");
 	const assert = require("assert")
 	const {TextDecoder} = require('util');
 
 	type rmType = "MV" | "MZ";
 	type rmFileHeads = "RPGMV" | "RPGMZ"; // rpgmz still using RPGMV head yet.
-	const RPGMAKER_NAME: rmType = window.Utils.RPGMAKER_NAME;
+	const RPGMAKER_NAME = Utils.RPGMAKER_NAME as rmType;
 
-	const UtilsOrDecrypter = window?.[{MZ: "Utils", MV: "Decrypter"}[RPGMAKER_NAME]];
+	const UtilsOrDecrypter = globalThis?.[{MZ: "Utils", MV: "Decrypter"}[RPGMAKER_NAME]];
 	assert(UtilsOrDecrypter?.decryptArrayBuffer, `can't find decryptArrayBuffer function. is current env: RPG ${RPGMAKER_NAME}?`)
 
 	function fileHead(filePath: string): rmFileHeads | undefined {
@@ -66,11 +67,21 @@
 				dataSystem.hasEncryptedAudio = false
 				fs.writeFileSync(fileName, JSON.stringify(dataSystem, null, "\t"), "utf-8")
 			});
-		window.$dataSystem.hasEncryptedImages = false
-		window.$dataSystem.hasEncryptedAudio = false
-		const UtilsOrDecrypter = window?.[{MZ: "Utils", MV: "Decrypter"}[RPGMAKER_NAME]];
-		UtilsOrDecrypter.hasEncryptedImages = false
-		UtilsOrDecrypter.hasEncryptedAudio = false
+		let $dataSystem = globalThis.$dataSystem as unknown as DataSystem
+		$dataSystem.hasEncryptedImages = false
+		$dataSystem.hasEncryptedAudio = false
+		switch (RPGMAKER_NAME) {
+			case "MZ":
+				(Utils as unknown as typeof MZ_Utils)._hasEncryptedAudio = false;
+				(Utils as unknown as typeof MZ_Utils)._hasEncryptedImages = false
+				break
+			case "MV":
+				Decrypter.hasEncryptedAudio = false
+				Decrypter.hasEncryptedImages = false
+				break
+			default :
+				throw new Error(`unknown RPGMaker name: ${RPGMAKER_NAME}`);
+		}
 	}
 
 	function decryptFiles(path: string, removeOldFile: boolean = false, rewriteDecryptInfo: boolean = false, touchMediaForAndroid: boolean = false) {
@@ -119,9 +130,11 @@ usage:
 		if (touchMediaForAndroid) fs.openSync(".nomedia", "a");
 	}
 
-	function decryptAllFiles() {decryptFiles(".", true, true, true)}
+	function decryptAllFiles() {
+		decryptFiles(".", true, true, true)
+	}
 
-	window.decryptFiles = decryptFiles
-	window.decryptAllFiles = decryptAllFiles
+	globalThis.decryptFiles = decryptFiles
+	globalThis.decryptAllFiles = decryptAllFiles
 
 })();

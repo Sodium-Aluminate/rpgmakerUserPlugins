@@ -1,6 +1,8 @@
 /*:
  * @plugindesc log message & options to console, so you can hold ctrl without miss any message.
  */
+import {Window_Base as Rmmz_Window_Base} from "rmmz-types";
+
 (() => {
 	"use strict";
 	const window = globalThis;
@@ -21,11 +23,19 @@
 		console.log(parts.join('\n'), ...appliedCss);
 	}
 
-	let __windowBase:any;
+	let __windowBase: any;
 
-	function escape(s:string) {
-		__windowBase ??= new window.Window_Base(new window.PIXI.Rectangle(0, 0, 0, 0));
-		return __windowBase.convertEscapeCharacters(s);
+	function escape(s: string) {
+		switch (Utils?.RPGMAKER_NAME) {
+			case "MV":
+				__windowBase ??= new Window_Base(0, 0, 0, 0);
+				return __windowBase.convertEscapeCharacters(s)
+			case "MZ":
+				__windowBase ??= new (Window_Base as unknown as typeof Rmmz_Window_Base)(new PIXI.Rectangle(0, 0, 0, 0))
+				return __windowBase.convertEscapeCharacters(s)
+			default:
+				throw new Error(`unknown RPGMaker name: ${Utils?.RPGMAKER_NAME}`)
+		}
 	}
 
 	injector.inject("Game_Message.prototype.add", "RETURN", function (cir) {
@@ -42,10 +52,10 @@
 		logStyledLines(result, ['color: #ffffff; background-color: #333333; font-weight: bold; padding: 2px; font-size: 14px;',
 			'color: #bbbbff; background-color: #333333; font-weight: bold; padding: 2px; font-size: 6px;']);
 	});
-	if (window.Utils?.RPGMAKER_NAME === "MV") {
+	if (Utils?.RPGMAKER_NAME === "MV") {
 		console.log("rmmv, skip hooking Game_Message.prototype.setSpeakerName");
 	} else {
-		console.assert(window.Utils?.RPGMAKER_NAME === "MZ")
+		console.assert(Utils?.RPGMAKER_NAME === "MZ")
 		injector.inject("Game_Message.prototype.setSpeakerName", "RETURN", function (cir) {
 			const result = [];
 			const args = cir.args;
@@ -62,9 +72,9 @@
 		});
 	}
 
-	function arrayEquals<T>(a:T[], b:T[]) {
+	function arrayEquals<T>(a: T[], b: T[]) {
 		return (a.length === b.length) &&
-			!a.some((val:T, i) => val !== b[i]);
+			!a.some((val: T, i) => val !== b[i]);
 	}
 
 	injector.inject("Game_Message.prototype.setChoices", "RETURN", function (cir) {
