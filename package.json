@@ -1,6 +1,7 @@
 {
 	"dependencies": {
 		"@types/node": "^22.15.21",
-		"rmmz-types": "^1.5.0-3"
+		"rmmz-types": "^1.5.0-3",
+		"rpgmakermv_typescript_dts": "^1.5.2"
 	}
 }

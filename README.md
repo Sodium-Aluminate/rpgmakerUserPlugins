@@ -7,8 +7,6 @@ To compile: `tsc` (likely comes with the `typescript` package);
 
 For the auto-installation script: `bwrap` and `nodejs`;
 
-~~Manual installation requires a [man](https://en.wikipedia.org/wiki/Man)~~.
-
 The plugins themselves require the game's NW.js to be sufficiently up-to-date.
 - As long as your game doesn't use weird obfuscation plugins (like the bad example [Nyaruru Fishy Fight](https://store.steampowered.com/app/1478160/Nyaruru_Fishy_Fight)), you can manually update the NW.js version of the game.
   - Download a [nwjs-sdk](https://nwjs.io/), replace all files in your game folder with it, and launch the game via `nw.exe` (or `nw` depending on your OS). The old `Game.exe` is basically `nw.exe`.
@@ -16,15 +14,10 @@ The plugins themselves require the game's NW.js to be sufficiently up-to-date.
 
 ## Compile
 Run `./build.sh`.
-- Releases with precompiled files are available if you want to skip compiling.
 
-## Auto Install
+## Install
 Run `./utils/installPlugin.sh <game directory>`
 - Make sure your package manager has `bwrap` and `nodejs`, and that your kernel supports user-mode nspawn.
-
-## Manual Install
-1. Copy all JS files from `build` to `<game root>/js/plugins/`.
-2. Append the entire content of `manuallyInstall.js` to the end of `<game root>/js/plugins.js`.
 
 # Plugin Descriptions
 ## lib*

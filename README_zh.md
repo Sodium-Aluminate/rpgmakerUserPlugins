@@ -5,9 +5,7 @@
 ## 依赖
 编译需要：`tsc`(可能在 `typescript` 包里);
 
-自动安装脚本需要：`bwrap` 和 `nodejs`;
-
-~~手动安装需要[手](https://zh.wikipedia.org/wiki/手)~~。
+安装脚本需要：`bwrap` 和 `nodejs`;
 
 插件本身需要被安装游戏的 nwjs 要足够新。
 - 只要你的游戏没有使用奇怪的混淆插件（如[咸鱼喵喵](https://store.steampowered.com/app/1478160/Nyaruru_Fishy_Fight)这种坏例子），你可以手动更新游戏的 nwjs版本。
@@ -16,15 +14,10 @@
 
 ## 编译
 执行 ./build.sh。
-- release 有编译好的，如果你犯懒的话。
 
-## 自动安装
+## 安装
 使用 `./utils/installPlugin.sh <游戏目录>` 即可
 - 确保你的包管理器装了 `bwrap` 和 `nodejs` 以及内核能 user 态 nspawn。
-
-## 手动安装
-1. 将 build 下的所有 js 文件复制到 `<游戏根目录>/js/plugins/` 下。
-2. 将 `manuallyInstall.js` 内的所有内容复制到 `<游戏根目录>/js/plugins.js` 的末尾。
 
 # 插件描述
 ## lib*

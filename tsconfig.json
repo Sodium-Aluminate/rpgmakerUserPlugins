@@ -1,10 +1,20 @@
 {
-	"compilerOptions": {
-		"target": "ESNext",
-		"moduleResolution": "bundler",
-		"module": "ESNext",
-		"outDir": "build",
-		"allowJs": false
-	},
-	"exclude": ["./utils"],
+  "compilerOptions": {
+    "target": "ESNext",
+    "moduleResolution": "bundler",
+    "module": "ESNext",
+    "outDir": "build",
+    "allowJs": false,
+    "skipLibCheck": true,
+    "types": [
+      "rpgmakermv_typescript_dts"
+    ]
+  },
+  "exclude": [
+    "./utils"
+  ],
+  "include": [
+    "node_modules/rpgmakermv_typescript_dts/typings/rpgmakermv/rpgmakermv.d.ts",
+    "src"
+  ]
 }
