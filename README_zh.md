@@ -1,14 +1,14 @@
 # RPG Maker User Plugins
 铝箔的 RMMV/MZ 实用小插件集合。
 
-# 安装
+# 使用方法
 ## 依赖
-编译需要：`tsc`(可能在 `typescript` 包里);
+编译需要：`esbuild`
 
 安装脚本需要：`bwrap` 和 `nodejs`;
 
 插件本身需要被安装游戏的 nwjs 要足够新。
-- 只要你的游戏没有使用奇怪的混淆插件（如[咸鱼喵喵](https://store.steampowered.com/app/1478160/Nyaruru_Fishy_Fight)这种坏例子），你可以手动更新游戏的 nwjs版本。
+- 只要你的游戏没有使用奇怪的混淆插件（如[咸鱼喵喵](https://store.steampowered.com/app/1478160/Nyaruru_Fishy_Fight)这种坏例子），你可以手动更新游戏的 nwjs 版本。
   - 下载一个 [nwjs-sdk](https://nwjs.io/)，并全部扔到游戏文件夹（替换已有文件），将 `nw.exe`（或者 `nw`，取决于操作系统） 作为游戏启动入口即可（旧的`Game.exe`其实也是`nw.exe`）。
 - 你也可以通过在编译前下调 `tsconfig.json` 的 `target` 来起到兼容的作用。
 
@@ -64,10 +64,11 @@
 
 ## openConsole
 开游戏的时候自动开控制台(dev tools)。
+- 如果 `package.json` 中 `chromium-args` 有 `--disable-devtools` 就没法 f12 开控制台，好在无论如何 js 层都能打开。
 - 浏览器里js层开不了控制台，仅在 nwjs 环境有效。
-  - 没错，你可以通过浏览器打开 index.html，不过无法存档且部分一些游戏引入的第三方插件会加载 node 库导致游戏崩溃。
+  - 没错，你可以通过浏览器打开 index.html，rmmv/mz 设计了兼容代码（尽管其他插件插件不一定支持），不过 file url 无法存档，且部分一些游戏引入的第三方插件会加载 node 库导致游戏崩溃。
     - 使用 http server 替代 `file://` 可以存档，但是这么做属实有点多此一举。
-- 至于 joiplay？那玩意儿好像没控制台？。
+- 至于 joiplay？那玩意儿好像没控制台。
 
 ## saveFileSkipCompress
 想编辑存档？但是存档被压缩了打不开？
