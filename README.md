@@ -3,7 +3,7 @@ A collection of useful plugins for RMMV/MZ. | [中文](README_zh.md)
 
 # Installation
 ## Dependencies
-To compile: `tsc` (likely comes with the `typescript` package);
+To compile: `esbuild`
 
 For the auto-installation script: `bwrap` and `nodejs`;
 
