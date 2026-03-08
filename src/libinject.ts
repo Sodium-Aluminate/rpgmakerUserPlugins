@@ -112,6 +112,10 @@
 			const objNames = names.slice(0, -1);
 			const fnName = names[names.length - 1];
 			let obj: any = globalThis
+			if (objNames.length > 0 && objNames[0].startsWith("`") && objNames[0].endsWith("`")) {
+				const expr = objNames.shift().slice(1, -1)
+				obj = eval(expr)
+			}
 			for (const prop of objNames) {
 				obj = obj[prop];
 				if (!obj) {
@@ -192,7 +196,7 @@
 			}
 		}
 
-		static readonly version = "1.1"
+		static readonly version = "1.2"
 	}
 
 	window.injector = new InjectorManager()
