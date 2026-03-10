@@ -1,6 +1,6 @@
 (() => {
 	let targetFastForwardHotkey = "tab";
-
+	globalThis.speedUpRate ||= 2;
 
 	switch (Utils.RPGMAKER_NAME) {
 		case "MZ":
@@ -66,7 +66,7 @@
 				Object.defineProperty(SceneManager, "_deltaTime", {
 					get() {
 						if (!Input.isPressed(targetFastForwardHotkey)) return dt
-						return dt / (isWaiting() ? 10 : 2)
+						return dt / (isWaiting() ? 10 : globalThis.speedUpRate || 2)
 					},
 					set(v) {
 						dt = v;
