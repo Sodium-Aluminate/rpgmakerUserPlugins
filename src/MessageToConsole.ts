@@ -97,6 +97,14 @@ import {Window_Base as Rmmz_Window_Base} from "rmmz-types";
 			let [text] = cir.args as [string]
 			text = escape(text)
 			console.log(text)
+		});
+	// https://github.com/rutan/torigoya-rpg-maker-plugin
+	if (PluginManager.parameters("TorigoyaMZ_NotifyMessage"))
+		injector.inject("Torigoya.NotifyMessage.Manager.notify", "HEAD", function (cir) {
+			let [notifyItem] = cir.args as [{ message: string }]
+			let message = notifyItem?.message
+			if (typeof message === "string")
+				console.log(escape(message))
 		})
 
 
